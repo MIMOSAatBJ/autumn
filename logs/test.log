@@ -1,0 +1,5 @@
+2017-09-29 18:27:59.308 [main] DEBUG cc.fcsp.App - hello world
+2017-09-29 18:27:59.311 [main] DEBUG cc.fcsp.test.AnotherApp - another app
+2017-09-29 18:27:59.312 [main] INFO  cc.fcsp.test.AnotherApp - test info lever
+2017-09-29 18:27:59.312 [main] WARN  cc.fcsp.test.AnotherApp - fuck --
+2017-09-29 18:27:59.313 [main] ERROR cc.fcsp.test.AnotherApp - ou no!
