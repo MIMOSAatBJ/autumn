@@ -7,10 +7,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>log4j2demo</artifactId>
+    <artifactId>rabbitmq-demo</artifactId>
     <packaging>jar</packaging>
 
-    <name>log4j2demo</name>
+    <name>rabbitmq-demo</name>
     <url>http://maven.apache.org</url>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+    </dependencies>
 </project>

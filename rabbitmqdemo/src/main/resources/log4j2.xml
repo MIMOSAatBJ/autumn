@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" monitorInterval="30">
+    <Properties>
+        <property name="STANDARD">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t-%L] %-8level %logger{36} - %msg%n</property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${STANDARD}"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <root level="all">
+            <appender-ref ref="Console"/>
+        </root>
+    </Loggers>
+</Configuration>
