@@ -2,7 +2,7 @@
 <!-- status : 指定log4j本身的打印日志的级别.ALL< Trace < DEBUG < INFO < WARN < ERROR
     < FATAL < OFF。 monitorInterval : 用于指定log4j自动重新配置的监测间隔时间，单位是s,最小是5s.
     参考:http://blog.csdn.net/u011389474/article/details/70054256-->
-<Configuration status="warn" monitorInterval="30">
+<Configuration status="WARN" monitorInterval="30">
 
     <Properties>
         <!-- 配置日志文件输出目录 ${sys:user.home}-->
@@ -22,8 +22,6 @@
             hostAddress : 本地ip地址 -->
 
         <property name="STANDARD">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t-%L] %-8level %logger{36} - %msg%n</property>
-
-        <property name="un_use">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</property>
     </Properties>
 
     <Appenders>
@@ -33,24 +31,32 @@
             <!-- 此种方式控制文件
             <filters>
                 <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
             </filters>-->
-            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout pattern="${STANDARD}"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t-%L] %-8level %logger{36} - %msg%n"/>
         </Console>
         <!--文件会打印出所有信息，STANDARD，由append属性决定，这个也挺有用的，适合临时测试用 -->
         <!--append为TRUE表示消息增加到指定文件中，false表示消息覆盖指定的文件内容，默认值是true -->
-        <File name="test" fileName="logs/test.log" append="false">
-            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>
+        <File name="Test" fileName="logs/test.log" append="true">
+            <filters>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </filters>
+            <!--  配置日志格式，可以用${}引用
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            -->
+            <PatternLayout pattern="${STANDARD}"/>
         </File>
         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，
         则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档 -->
-        <RollingFile name="RollingFileInfo" fileName="${INFO_LOG_PATH}/info.log"
-                     filePattern="${INFO_LOG_PATH}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="RollingFileInfo" fileName="${INFO_LOG_PATH}/info.log"  filePattern="${INFO_LOG_PATH}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
-            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <filters>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </filters>
+            <PatternLayout pattern="${STANDARD}"/>
             <Policies>
                 <!-- 基于时间的滚动策略，interval属性用来指定多久滚动一次，默认是1 hour。 modulate=true用来调整时间：比如现在是早上3am，interval是4，那么第一次滚动是在4am，接着是8am，12am...而不是7am. -->
                 <!-- 关键点在于 filePattern后的日期格式，以及TimeBasedTriggeringPolicy的interval，
@@ -62,10 +68,12 @@
             </Policies>
         </RollingFile>
 
-        <RollingFile name="RollingFileWarn" fileName="${WARN_LOG_PATH}/warn.log"
-                     filePattern="${WARN_LOG_PATH}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log">
-            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        <RollingFile name="RollingFileWarn" fileName="${WARN_LOG_PATH}/warn.log"  filePattern="${WARN_LOG_PATH}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log">
+            <filters>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            </filters>
+            <PatternLayout pattern="${STANDARD}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
                 <SizeBasedTriggeringPolicy size="2 kB"/>
@@ -74,10 +82,9 @@
             <DefaultRolloverStrategy max="20"/>
         </RollingFile>
 
-        <RollingFile name="RollingFileError" fileName="${ERROR_LOG_PATH}/error.log"
-                     filePattern="${ERROR_LOG_PATH}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd-HH-mm}-%i.log">
+        <RollingFile name="RollingFileError" fileName="${ERROR_LOG_PATH}/error.log"  filePattern="${ERROR_LOG_PATH}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd-HH-mm}-%i.log">
             <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="${STANDARD}"/>
             <Policies>
                 <!-- log4j2的按分钟 分日志文件 : warn-%d{yyyy-MM-dd-HH-mm}-%i.log-->
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
@@ -92,25 +99,21 @@
         <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
         <logger name="org.springframework" level="INFO"/>
         <logger name="org.mybatis" level="INFO"/>
+        <logger name="org.springframework.core" level="INFO"/>
+        <logger name="org.springframework.beans" level="INFO"/>
+        <logger name="org.springframework.context" level="INFO"/>
+        <logger name="org.springframework.web" level="INFO"/>
+        <logger name="org.jboss.netty" level="WARN"/>
+        <logger name="org.apache.http" level="WARN"/>
 
-        <!-- 第三方日志系统 -->
-        <logger name="org.springframework.core" level="info"/>
-        <logger name="org.springframework.beans" level="info"/>
-        <logger name="org.springframework.context" level="info"/>
-        <logger name="org.springframework.web" level="info"/>
-        <logger name="org.jboss.netty" level="warn"/>
-        <logger name="org.apache.http" level="warn"/>
-
-
-        <!-- 配置日志的根节点 -->
-        <root level="all">
+        <!-- 配置日志的根节点 根节点可以配置级别-->
+        <root level="ALL">
             <appender-ref ref="Console"/>
-            <appender-ref ref="test"/>
+            <appender-ref ref="Test"/>
             <appender-ref ref="RollingFileInfo"/>
             <appender-ref ref="RollingFileWarn"/>
             <appender-ref ref="RollingFileError"/>
         </root>
-
     </Loggers>
 
 </Configuration>

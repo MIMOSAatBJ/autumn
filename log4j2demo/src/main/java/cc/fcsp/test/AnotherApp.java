@@ -7,6 +7,7 @@ public class AnotherApp {
     private static final Logger logger = LogManager.getLogger(AnotherApp.class);
 
     public static void test() {
+        logger.trace("trace ---");
         logger.debug("another app");
         logger.info("test info lever");
         logger.warn("fuck --");

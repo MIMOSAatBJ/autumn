@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/autumn.iml" filepath="$PROJECT_DIR$/autumn.iml" />
       <module fileurl="file://$PROJECT_DIR$/log4j2demo/log4j2demo.iml" filepath="$PROJECT_DIR$/log4j2demo/log4j2demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rabbitmqdemo/rabbitmqdemo.iml" filepath="$PROJECT_DIR$/rabbitmqdemo/rabbitmqdemo.iml" />
     </modules>
   </component>
 </project>
